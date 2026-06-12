@@ -1,0 +1,145 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # ─────────────────────────────────────────────
+  # CI: Kiểm tra code quality & production-ready
+  # ─────────────────────────────────────────────
+  ci:
+    name: CI — Production Readiness Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 06-lab-complete
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: 06-lab-complete/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Production Readiness Check
+        run: python check_production_ready.py
+
+      - name: Quick API smoke test
+        run: |
+          pip install httpx
+          python -c "
+import threading, time, json, httpx
+
+# Start server
+import uvicorn
+from app.main import app
+
+def run_server():
+    uvicorn.run(app, host='0.0.0.0', port=8000, timeout_graceful_shutdown=5)
+
+t = threading.Thread(target=run_server, daemon=True)
+t.start()
+time.sleep(4)
+
+client = httpx.Client(base_url='http://localhost:8000')
+errors = []
+
+# Test 1: GET /health
+r = client.get('/health')
+assert r.status_code == 200, f'/health: {r.status_code}'
+assert r.json()['status'] == 'ok'
+print('✅ GET /health — OK')
+
+# Test 2: GET /ready
+r = client.get('/ready')
+assert r.status_code == 200
+print('✅ GET /ready — OK')
+
+# Test 3: POST /ask — NO key → 401
+r = client.post('/ask', json={'question': 'hi'})
+assert r.status_code == 401, f'/ask (no key): {r.status_code}'
+print('✅ POST /ask (no key) → 401 — OK')
+
+# Test 4: POST /ask — WITH key → 200
+r = client.post('/ask', json={'question': 'hello'},
+                headers={'X-API-Key': 'dev-key-change-me'})
+assert r.status_code == 200, f'/ask (with key): {r.status_code}'
+assert 'answer' in r.json()
+print('✅ POST /ask (with key) → 200 — OK')
+
+# Test 5: Rate limit (21 req, limit 20)
+limited = False
+for i in range(21):
+    r = client.post('/ask', json={'question': f't{i}'},
+                    headers={'X-API-Key': 'dev-key-change-me'})
+    if r.status_code == 429:
+        limited = True
+assert limited, 'Rate limiter did not trigger!'
+print('✅ Rate limit (429 after 20 req) — OK')
+
+print()
+print('🎉 All 5 smoke tests passed!')
+"
+
+  # ─────────────────────────────────────────────
+  # CD: Build & Push Docker Image
+  # ─────────────────────────────────────────────
+  cd:
+    name: CD — Build & Push Docker
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: 06-lab-complete
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

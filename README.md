@@ -4,6 +4,8 @@
 > Repository thực hành đi kèm bài giảng Day 12.  
 > Mỗi phần có ví dụ **cơ bản** (hiểu concept) và **chuyên sâu** (production-ready).
 
+[![CI/CD Pipeline](https://github.com/vietlinhh02/day12_ha-tang-cloud_va_deployment/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/vietlinhh02/day12_ha-tang-cloud_va_deployment/actions/workflows/ci-cd.yml)
+
 ---
 
 ## Cấu Trúc Project
