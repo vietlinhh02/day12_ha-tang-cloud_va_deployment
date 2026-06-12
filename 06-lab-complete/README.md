@@ -4,6 +4,13 @@
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/vietlinhh02/day12_ha-tang-cloud_va_deployment/tree/main/06-lab-complete)
 
+**Deploy lên Render:**
+1. Vào https://render.com -> New Blueprint
+2. Chọn repo `vietlinhh02/day12_ha-tang-cloud_va_deployment`
+3. **Blueprint Path:** nhập `06-lab-complete/render.yaml`
+4. Set secrets: `DISCORD_TOKEN`, `DEEPSEEK_API_KEY`, `TARGET_CHANNEL_IDS`
+5. Deploy
+
 </div>
 
 <table>
