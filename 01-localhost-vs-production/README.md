@@ -20,7 +20,7 @@ develop/
 cd develop
 pip install -r requirements.txt
 python app.py
-# Truy cập: http://localhost:8000
+# Truy cập: http://localhost:8001
 ```
 
 ### Những vấn đề trong code này:
@@ -57,7 +57,7 @@ python app.py
 |--|-----------|--------------|
 | Config | Hardcode trong code | Đọc từ env vars |
 | Secrets | `api_key = "sk-abc123"` | `os.getenv("OPENAI_API_KEY")` |
-| Port | Cố định `8000` | Từ `PORT` env var |
+| Port | Cố định `8001` | Từ `PORT` env var |
 | Health check | Không có | `GET /health` |
 | Shutdown | Tắt đột ngột | Graceful — hoàn thành request hiện tại |
 | Logging | `print()` | Structured JSON logging |
