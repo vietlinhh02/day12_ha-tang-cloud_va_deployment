@@ -1,0 +1,17 @@
+[project]
+name = "discord-class-bot"
+version = "0.1.0"
+description = "Discord bot for class Q&A using RAG over message history with DeepSeek V4 Flash"
+requires-python = ">=3.11"
+dependencies = [
+    "discord.py>=2.3",
+    "httpx>=0.27",
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+    "python-dotenv>=1.0",
+    "fastembed>=0.8",
+    "rank_bm25>=0.2",
+]
+
+[project.scripts]
+bot = "bot.main:main"

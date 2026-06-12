@@ -1,100 +1,119 @@
-# Lab 12 — Complete Production Agent
+# Discord Class Bot — Trợ lý AI tra cứu lịch sử lớp học
 
-Kết hợp TẤT CẢ những gì đã học trong 1 project hoàn chỉnh.
+<table>
+<tr><td><strong>Track</strong></td><td>A — Learning OS (Vin AI Thực Chiến)</td></tr>
+<tr><td><strong>Nhóm</strong></td><td>A4</td></tr>
+</table>
 
-## Checklist Deliverable
+## Thành viên
 
-- [x] Dockerfile (multi-stage, < 500 MB)
-- [x] docker-compose.yml (agent + redis)
-- [x] .dockerignore
-- [x] Health check endpoint (`GET /health`)
-- [x] Readiness endpoint (`GET /ready`)
-- [x] API Key authentication
-- [x] Rate limiting
-- [x] Cost guard
-- [x] Config từ environment variables
-- [x] Structured logging
-- [x] Graceful shutdown
-- [x] Public URL ready (Railway / Render config)
+| Họ tên | Vai trò |
+|---|---|
+| **Nguyễn Viết Linh** | Prototype (Discord bot + RAG pipeline) |
+| Mai Ngọc Duy | Research / Evidence |
+| Hoàng Trung Quân | SPEC |
+| Đặng Minh Chức | Test / Failure path |
+| Bùi Hoàng Linh | Demo script / Repo |
 
----
+## Bài toán
 
-## Cấu Trúc
+Học viên lớp Discord gặp khó khăn khi tra cứu lại nội dung đã trao đổi vì chat volume cao (200-500 tin/buổi), tin nhắn phân mảnh, reply chain phức tạp — dẫn đến bỏ lỡ bài tập, deadline, hoặc kiến thức quan trọng.
 
-```
-06-lab-complete/
-├── app/
-│   ├── main.py         # Entry point — kết hợp tất cả
-│   ├── config.py       # 12-factor config
-│   ├── auth.py         # API Key + JWT
-│   ├── rate_limiter.py # Rate limiting
-│   └── cost_guard.py   # Budget protection
-├── Dockerfile          # Multi-stage, production-ready
-├── docker-compose.yml  # Full stack
-├── railway.toml        # Deploy Railway
-├── render.yaml         # Deploy Render
-├── .env.example        # Template
-├── .dockerignore
-└── requirements.txt
-```
+**Giải pháp:** Bot AI đọc toàn bộ message history → RAG retrieval → trả lời câu hỏi bằng tiếng Việt, kèm link message gốc để người dùng tự kiểm chứng.
 
----
+## Tính năng
 
-## Chạy Local
+- `/ask <câu hỏi>` — Hỏi bất kỳ nội dung nào đã trao đổi trong lớp
+- `/summary <chủ đề>` — Tóm tắt một chủ đề từ lịch sử chat
+- `/correct` — Gửi correction khi bot trả lời sai
+- `/reload` — Tải lại toàn bộ lịch sử chat
+- Tự động trả lời khi được @mention
+- Tự động index tin nhắn mới theo thời gian thực
+- Auto-delete cặp hỏi-đáp sau khoảng thời gian cấu hình
+- Tìm kiếm theo người dùng cụ thể (search_messages_by_user)
+- Hiển thị citation kèm link Discord message gốc
+- Phân biệt nguồn: giảng viên (độ tin cậy cao) vs học viên
+- Fallback thông minh khi không tìm thấy thông tin
+
+## Tech Stack
+
+| Thành phần | Công nghệ |
+|---|---|
+| Bot framework | discord.py 2.x |
+| LLM | DeepSeek V4 Flash |
+| API endpoint | `https://opencode.ai/zen/go/v1/chat/completions` |
+| Embedding | fastembed (all-MiniLM-L6-v2) |
+| Retrieval | Hybrid: BM25 (rank-bm25) + vector cosine similarity |
+| Rerank | Reciprocal Rank Fusion (RRF) |
+| HTTP client | httpx (async) |
+| Runtime | Python 3.11+ |
+
+## Cài đặt
 
 ```bash
-# 1. Setup
+cd codebase
+
+# Tạo virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Cài dependencies
+pip install -e .
+```
+
+## Cấu hình
+
+```bash
 cp .env.example .env
-
-# 2. Chạy với Docker Compose
-docker compose up
-
-# 3. Test
-curl http://localhost/health
-
-# 4. Lấy API key từ .env, test endpoint
-API_KEY=$(grep AGENT_API_KEY .env | cut -d= -f2)
-curl -H "X-API-Key: $API_KEY" \
-     -X POST http://localhost/ask \
-     -H "Content-Type: application/json" \
-     -d '{"question": "What is deployment?"}'
 ```
 
----
+Các biến môi trường cần thiết:
 
-## Deploy Railway (< 5 phút)
+| Biến | Mô tả |
+|---|---|
+| `DISCORD_TOKEN` | Token của Discord bot |
+| `DEEPSEEK_API_KEY` | API key cho DeepSeek |
+| `TARGET_CHANNEL_IDS` | ID các kênh cần index (phân cách bằng dấu phẩy) |
+| `INSTRUCTOR_IDS` | ID Discord của giảng viên (phân cách bằng dấu phẩy) |
+| `AUTO_DELETE_SECONDS` | Thời gian tự động xoá cặp hỏi-đáp (mặc định 60s, 0 = không xoá) |
+| `HISTORY_LIMIT` | Số lượng tin nhắn tối đa fetch từ Discord (mặc định 5000) |
+
+### Lấy Discord Bot Token
+
+1. Vào https://discord.com/developers/applications
+2. Tạo application → Bot → Copy token
+3. Bot cần quyền: `Send Messages`, `Read Message History`, `Use Slash Commands`, `Mention Everyone`
+4. Invite bot với scope `bot` + `applications.commands`
+
+## Chạy
 
 ```bash
-# Cài Railway CLI
-npm i -g @railway/cli
-
-# Login và deploy
-railway login
-railway init
-railway variables set OPENAI_API_KEY=sk-...
-railway variables set AGENT_API_KEY=your-secret-key
-railway up
-
-# Nhận public URL!
-railway domain
+python -m bot.main
 ```
 
----
+## Cấu trúc
 
-## Deploy Render
-
-1. Push repo lên GitHub
-2. Render Dashboard → New → Blueprint
-3. Connect repo → Render đọc `render.yaml`
-4. Set secrets: `OPENAI_API_KEY`, `AGENT_API_KEY`
-5. Deploy → Nhận URL!
-
----
-
-## Kiểm Tra Production Readiness
-
-```bash
-python check_production_ready.py
+```
+codebase/
+├── pyproject.toml
+├── .env.example
+└── bot/
+    ├── __init__.py
+    ├── main.py           ← Entry point, Discord client lifecycle
+    ├── config.py         ← Settings từ biến môi trường
+    ├── llm.py            ← DeepSeek V4 Flash integration (async)
+    ├── rag.py            ← Hybrid search: BM25 + vector cosine + RRF
+    ├── agent.py          ← Tool-calling agent loop với 5 tools
+    ├── cog_qa.py         ← Slash commands + on_message handler
+    └── corrections.py    ← Lưu trữ & tra cứu user corrections
 ```
 
-Script này kiểm tra tất cả items trong checklist và báo cáo những gì còn thiếu.
+## Luồng hoạt động
+
+1. Bot khởi động → sync slash commands
+2. User gõ `/ask "tối qua có bài tập gì không?"` hoặc @mention bot
+3. Bot fetch message history từ Discord (incremental nếu đã có cache)
+4. Chunk → embedding → hybrid search (BM25 + cosine → RRF merge)
+5. Agent loop: gọi tool search_history → đọc kết quả → quyết định trả lời hoặc gọi thêm tool
+6. Trả về embed kèm citation link message gốc, confidence indicator
+7. Auto-delete cặp hỏi-đáp sau `AUTO_DELETE_SECONDS` giây (nếu bật)

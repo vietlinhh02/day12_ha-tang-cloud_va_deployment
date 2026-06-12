@@ -1,87 +1,86 @@
 """
-Smoke tests cho CI/CD pipeline.
-Kiểm tra nhanh tất cả endpoints của production agent.
-Chạy: python .github/scripts/smoke_test.py
+Smoke tests cho CI/CD pipeline — Discord Class Bot.
+Kiểm tra imports, cấu trúc module, config parsing.
 """
-import threading
-import time
-import json
+import os
 import sys
 
-import httpx
-import uvicorn
+# Add project to path
+_project_dir = os.path.join(os.path.dirname(__file__), "..", "..", "06-lab-complete")
+sys.path.insert(0, os.path.abspath(_project_dir))
 
-sys.path.insert(0, "06-lab-complete")
-from app.main import app
-
-BASE_URL = "http://localhost:8000"
+import importlib
 
 
-def run_server():
-    uvicorn.run(app, host="0.0.0.0", port=8000, timeout_graceful_shutdown=5)
+def test_import(module_name: str) -> bool:
+    try:
+        importlib.import_module(module_name)
+        print(f"  ✅ {module_name} — imports OK")
+        return True
+    except Exception as e:
+        print(f"  ❌ {module_name} — {e}")
+        return False
 
 
-def main():
-    # Start server
-    t = threading.Thread(target=run_server, daemon=True)
-    t.start()
-    time.sleep(4)
-
-    client = httpx.Client(base_url=BASE_URL, timeout=10)
+def test_all() -> int:
     passed = 0
-    total = 5
+    total = 6
 
-    # Test 1: GET /health
-    r = client.get("/health")
-    assert r.status_code == 200, f"/health: {r.status_code}"
-    assert r.json()["status"] == "ok"
-    print(f"  ✅ GET /health — 200 OK")
-    passed += 1
+    print("=" * 50)
+    print("  Discord Class Bot — Smoke Tests")
+    print("=" * 50)
 
-    # Test 2: GET /ready
-    r = client.get("/ready")
-    assert r.status_code == 200
-    print(f"  ✅ GET /ready — 200 OK")
-    passed += 1
+    # Test 1-6: verify all modules import correctly
+    modules = [
+        "bot.config",
+        "bot.main",
+        "bot.llm",
+        "bot.rag",
+        "bot.agent",
+        "bot.corrections",
+    ]
 
-    # Test 3: POST /ask — NO key → 401
-    r = client.post("/ask", json={"question": "hi"})
-    assert r.status_code == 401, f"/ask (no key): {r.status_code}"
-    print(f"  ✅ POST /ask (no key) → 401 — OK")
-    passed += 1
+    for mod in modules:
+        if test_import(mod):
+            passed += 1
 
-    # Test 4: POST /ask — WITH key → 200
-    r = client.post(
-        "/ask",
-        json={"question": "hello"},
-        headers={"X-API-Key": "dev-key-change-me"},
-    )
-    assert r.status_code == 200, f"/ask (with key): {r.status_code}"
-    assert "answer" in r.json()
-    print(f"  ✅ POST /ask (with key) → 200 — OK")
-    passed += 1
+    # Verify Settings dataclass works
+    print()
+    try:
+        import os
+        os.environ["DISCORD_TOKEN"] = "test-token"
+        os.environ["DEEPSEEK_API_KEY"] = "test-key"
+        os.environ["TARGET_CHANNEL_IDS"] = "123,456"
+        os.environ["INSTRUCTOR_IDS"] = "789"
 
-    # Test 5: Rate limit (21 req, limit 20)
-    limited = False
-    for i in range(21):
-        r = client.post(
-            "/ask",
-            json={"question": f"t{i}"},
-            headers={"X-API-Key": "dev-key-change-me"},
-        )
-        if r.status_code == 429:
-            limited = True
-    assert limited, "Rate limiter did not trigger!"
-    print(f"  ✅ Rate limit (429 after 20 req) — OK")
-    passed += 1
+        # Force reload config module
+        if "bot.config" in sys.modules:
+            del sys.modules["bot.config"]
+        from bot.config import Settings
+
+        s = Settings()
+        assert s.discord_token == "test-token"
+        assert s.deepseek_api_key == "test-key"
+        assert s.target_channel_ids == [123, 456]
+        assert s.instructor_ids == ["789"]
+        print(f"  ✅ Config parsing — OK")
+        passed += 1
+        total += 1
+    except Exception as e:
+        print(f"  ❌ Config parsing — {e}")
+
+    # Clean up env
+    for k in ["DISCORD_TOKEN", "DEEPSEEK_API_KEY", "TARGET_CHANNEL_IDS", "INSTRUCTOR_IDS"]:
+        os.environ.pop(k, None)
 
     print(f"\n  Result: {passed}/{total} tests passed")
     if passed == total:
         print("  🎉 All smoke tests passed!")
+        return 0
     else:
         print("  ❌ Some tests failed!")
-        sys.exit(1)
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(test_all())

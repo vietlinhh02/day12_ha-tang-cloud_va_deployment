@@ -1,15 +1,10 @@
 """
-Production Readiness Checker
-
-Tự động kiểm tra project có đủ điều kiện deploy chưa.
+Production Readiness Checker — Discord Class Bot
+Kiểm tra project đủ điều kiện deploy chưa.
 Chạy: python check_production_ready.py
-
-Output: checklist với ✅ / ❌ cho từng item.
 """
 import os
 import sys
-import json
-import subprocess
 
 
 def check(name: str, passed: bool, detail: str = "") -> dict:
@@ -18,105 +13,92 @@ def check(name: str, passed: bool, detail: str = "") -> dict:
     return {"name": name, "passed": passed}
 
 
+def check_file(base: str, path: str) -> bool:
+    return os.path.exists(os.path.join(base, path))
+
+
 def run_checks():
     results = []
     base = os.path.dirname(__file__)
 
     print("\n" + "=" * 55)
-    print("  Production Readiness Check — Day 12 Lab")
+    print("  Production Readiness Check — Discord Class Bot")
     print("=" * 55)
 
-    # ── Files ──────────────────���───────────────────
+    # ── Required Files ──
     print("\n📁 Required Files")
-    results.append(check("Dockerfile exists",
-                         os.path.exists(os.path.join(base, "Dockerfile"))))
-    results.append(check("docker-compose.yml exists",
-                         os.path.exists(os.path.join(base, "docker-compose.yml"))))
-    results.append(check(".dockerignore exists",
-                         os.path.exists(os.path.join(base, ".dockerignore"))))
-    results.append(check(".env.example exists",
-                         os.path.exists(os.path.join(base, ".env.example"))))
-    results.append(check("requirements.txt exists",
-                         os.path.exists(os.path.join(base, "requirements.txt"))))
-    results.append(check("railway.toml or render.yaml exists",
-                         os.path.exists(os.path.join(base, "railway.toml")) or
-                         os.path.exists(os.path.join(base, "render.yaml"))))
+    for f in ["Dockerfile", "docker-compose.yml", ".dockerignore",
+              ".env.example", "requirements.txt", "pyproject.toml",
+              "railway.toml", "render.yaml"]:
+        results.append(check(f"{f} exists", check_file(base, f)))
 
-    # ── Security ──────────────────────────────────���
+    # ── Bot Structure ──
+    print("\n🤖 Bot Structure")
+    bot_files = [
+        "bot/__init__.py", "bot/main.py", "bot/config.py",
+        "bot/llm.py", "bot/agent.py", "bot/cog_qa.py",
+        "bot/rag.py", "bot/corrections.py",
+    ]
+    for f in bot_files:
+        exists = check_file(base, f)
+        results.append(check(f"  {f}", exists, "" if exists else "Missing!"))
+
+    # ── Security ──
     print("\n🔒 Security")
-
-    # Check .env not tracked
-    env_file = os.path.join(base, ".env")
-    gitignore = os.path.join(base, ".gitignore")
-    root_gitignore = os.path.join(base, "..", ".gitignore")
-
+    gitignore = os.path.join(base, "..", ".gitignore")
     env_ignored = False
-    for gi in [gitignore, root_gitignore]:
-        if os.path.exists(gi):
-            content = open(gi).read()
-            if ".env" in content:
-                env_ignored = True
-                break
-    results.append(check(".env in .gitignore",
-                         env_ignored,
+    if os.path.exists(gitignore):
+        content = open(gitignore).read()
+        if ".env" in content:
+            env_ignored = True
+    results.append(check(".env in .gitignore", env_ignored,
                          "Add .env to .gitignore!" if not env_ignored else ""))
 
-    # Check no hardcoded secrets in code
+    # Check no hardcoded secrets
     secrets_found = []
-    for f in ["app/main.py", "app/config.py"]:
-        fpath = os.path.join(base, f)
-        if os.path.exists(fpath):
-            content = open(fpath).read()
-            for bad in ["sk-", "password123", "hardcoded"]:
-                if bad in content:
-                    secrets_found.append(f"{f}:{bad}")
+    for root, dirs, files in os.walk(os.path.join(base, "bot")):
+        for f in files:
+            if f.endswith(".py"):
+                content = open(os.path.join(root, f)).read()
+                for bad in ["sk-", "password123", "hardcoded"]:
+                    if bad in content:
+                        secrets_found.append(f"{f}:{bad}")
     results.append(check("No hardcoded secrets in code",
                          len(secrets_found) == 0,
                          str(secrets_found) if secrets_found else ""))
 
-    # ── API Endpoints ────────────────────────────��─
-    print("\n🌐 API Endpoints (code check)")
-    main_py = os.path.join(base, "app", "main.py")
-    if os.path.exists(main_py):
-        content = open(main_py).read()
-        results.append(check("/health endpoint defined",
-                             '"/health"' in content or "'/health'" in content))
-        results.append(check("/ready endpoint defined",
-                             '"/ready"' in content or "'/ready'" in content))
-        results.append(check("Authentication implemented",
-                             "api_key" in content.lower() or "verify_token" in content))
-        results.append(check("Rate limiting implemented",
-                             "rate_limit" in content.lower() or "429" in content))
-        results.append(check("Graceful shutdown (SIGTERM)",
-                             "SIGTERM" in content))
-        results.append(check("Structured logging (JSON)",
-                             "json.dumps" in content or '"event"' in content))
-    else:
-        results.append(check("app/main.py exists", False, "Create app/main.py!"))
-
-    # ── Docker ─────────────────────────────────────
+    # ── Docker ──
     print("\n🐳 Docker")
     dockerfile = os.path.join(base, "Dockerfile")
     if os.path.exists(dockerfile):
         content = open(dockerfile).read()
         results.append(check("Multi-stage build",
-                             "AS builder" in content or "AS runtime" in content))
+                             "AS builder" in content and "AS runtime" in content))
         results.append(check("Non-root user",
                              "useradd" in content or "USER " in content))
-        results.append(check("HEALTHCHECK instruction",
-                             "HEALTHCHECK" in content))
         results.append(check("Slim base image",
                              "slim" in content or "alpine" in content))
 
     dockerignore = os.path.join(base, ".dockerignore")
     if os.path.exists(dockerignore):
         content = open(dockerignore).read()
-        results.append(check(".dockerignore covers .env",
-                             ".env" in content))
+        results.append(check(".dockerignore covers .env", ".env" in content))
         results.append(check(".dockerignore covers __pycache__",
                              "__pycache__" in content))
 
-    # ── Summary ───────────────────────────────────���
+    # ── Config Validation ──
+    print("\n⚙️ Config")
+    config_py = os.path.join(base, "bot", "config.py")
+    if os.path.exists(config_py):
+        content = open(config_py).read()
+        checks = [
+            ("DISCORD_TOKEN", "discord_token"),
+            ("DEEPSEEK_API_KEY", "deepseek_api_key"),
+        ]
+        for name, var in checks:
+            results.append(check(f"  {name} configured", var in content))
+
+    # ── Summary ──
     passed = sum(1 for r in results if r["passed"])
     total = len(results)
     pct = round(passed / total * 100)
