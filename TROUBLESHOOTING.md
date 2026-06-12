@@ -1,10 +1,10 @@
-# 🔧 Troubleshooting Guide
+#  Troubleshooting Guide
 
 > Giải quyết các vấn đề thường gặp trong Day 12 Lab
 
 ---
 
-## 🐳 Docker Issues
+##  Docker Issues
 
 ### Issue: "Cannot connect to Docker daemon"
 
@@ -169,10 +169,10 @@ docker ps -a  # Container có status "Exited (1)"
    
    - **Wrong CMD/ENTRYPOINT:**
      ```dockerfile
-     # ❌ Wrong
+     #  Wrong
      CMD python app.py
      
-     # ✅ Correct
+     #  Correct
      CMD ["python", "app.py"]
      ```
    
@@ -190,7 +190,7 @@ docker ps -a  # Container có status "Exited (1)"
 
 ---
 
-## 🎼 Docker Compose Issues
+##  Docker Compose Issues
 
 ### Issue: "Service 'X' failed to build"
 
@@ -225,10 +225,10 @@ requests.get("http://redis:6379")  # Connection refused
 
 1. **Use service name as hostname:**
    ```python
-   # ✅ Correct
+   #  Correct
    redis_url = "redis://redis:6379"
    
-   # ❌ Wrong
+   #  Wrong
    redis_url = "redis://localhost:6379"
    ```
 
@@ -284,7 +284,7 @@ requests.get("http://redis:6379")  # Connection refused
 
 ---
 
-## 🚂 Railway Issues
+##  Railway Issues
 
 ### Issue: "railway: command not found"
 
@@ -367,10 +367,10 @@ requests.get("http://redis:6379")  # Connection refused
    
    - **Wrong PORT:**
      ```python
-     # ✅ Use Railway's PORT
+     #  Use Railway's PORT
      port = int(os.getenv("PORT", 8000))
      
-     # ❌ Hardcoded port
+     #  Hardcoded port
      port = 8000
      ```
    
@@ -384,7 +384,7 @@ requests.get("http://redis:6379")  # Connection refused
 
 ---
 
-## 🎨 Render Issues
+##  Render Issues
 
 ### Issue: "Build failed on Render"
 
@@ -445,7 +445,7 @@ Health check failed: GET /health returned 404
 
 ---
 
-## 🔐 Authentication Issues
+##  Authentication Issues
 
 ### Issue: "401 Unauthorized" even with correct API key
 
@@ -453,10 +453,10 @@ Health check failed: GET /health returned 404
 
 1. **Check header name:**
    ```bash
-   # ✅ Correct
+   #  Correct
    curl -H "X-API-Key: secret" http://localhost:8000/ask
    
-   # ❌ Wrong
+   #  Wrong
    curl -H "API-Key: secret" http://localhost:8000/ask
    ```
 
@@ -493,16 +493,16 @@ Health check failed: GET /health returned 404
 
 3. **Check token format:**
    ```bash
-   # ✅ Correct
+   #  Correct
    curl -H "Authorization: Bearer <token>"
    
-   # ❌ Wrong
+   #  Wrong
    curl -H "Authorization: <token>"
    ```
 
 ---
 
-## ⏱️ Rate Limiting Issues
+##  Rate Limiting Issues
 
 ### Issue: "429 Too Many Requests" immediately
 
@@ -540,7 +540,7 @@ Health check failed: GET /health returned 404
 
 ---
 
-## 💰 Cost Guard Issues
+##  Cost Guard Issues
 
 ### Issue: "402 Payment Required" but budget not exceeded
 
@@ -567,7 +567,7 @@ Health check failed: GET /health returned 404
 
 ---
 
-## 🔄 Redis Issues
+##  Redis Issues
 
 ### Issue: "Connection refused to Redis"
 
@@ -580,11 +580,11 @@ Health check failed: GET /health returned 404
 
 2. **Check connection string:**
    ```python
-   # ✅ Correct
+   #  Correct
    redis_url = "redis://redis:6379"  # In Docker Compose
    redis_url = "redis://localhost:6379"  # Local
    
-   # ❌ Wrong
+   #  Wrong
    redis_url = "redis://redis:6379/0"  # Extra /0 might cause issues
    ```
 
@@ -629,7 +629,7 @@ Health check failed: GET /health returned 404
 
 ---
 
-## 🏥 Health Check Issues
+##  Health Check Issues
 
 ### Issue: "Health check always fails"
 
@@ -642,12 +642,12 @@ Health check failed: GET /health returned 404
 
 2. **Check response format:**
    ```python
-   # ✅ Return 200 status
+   #  Return 200 status
    @app.get("/health")
    def health():
        return {"status": "ok"}
    
-   # ❌ Return error status
+   #  Return error status
    @app.get("/health")
    def health():
        return JSONResponse(status_code=500, content={"status": "error"})
@@ -669,7 +669,7 @@ Health check failed: GET /health returned 404
 
 ---
 
-## 🔄 Graceful Shutdown Issues
+##  Graceful Shutdown Issues
 
 ### Issue: "Container killed immediately"
 
@@ -704,7 +704,7 @@ Health check failed: GET /health returned 404
 
 ---
 
-## 📊 Logging Issues
+##  Logging Issues
 
 ### Issue: "No logs visible"
 
@@ -735,7 +735,7 @@ Health check failed: GET /health returned 404
 
 ---
 
-## 🌐 Network Issues
+##  Network Issues
 
 ### Issue: "Cannot access deployed app"
 
@@ -766,7 +766,7 @@ Health check failed: GET /health returned 404
 
 ---
 
-## 🐛 General Debugging Tips
+##  General Debugging Tips
 
 ### Enable verbose logging
 
@@ -818,7 +818,7 @@ print(sys.path)
 
 ---
 
-## 📞 Getting Help
+##  Getting Help
 
 ### Before asking for help:
 
@@ -846,7 +846,7 @@ print(sys.path)
 
 ---
 
-## 🔗 Useful Resources
+##  Useful Resources
 
 - [Docker Documentation](https://docs.docker.com/)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
@@ -857,4 +857,4 @@ print(sys.path)
 
 ---
 
-**Still stuck? Check the Q&A section in CODE_LAB.md or ask your instructor! 💬**
+**Still stuck? Check the Q&A section in CODE_LAB.md or ask your instructor! **

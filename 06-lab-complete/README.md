@@ -95,17 +95,17 @@ python -m bot.main
 
 ```
 codebase/
-├── pyproject.toml
-├── .env.example
-└── bot/
-    ├── __init__.py
-    ├── main.py           ← Entry point, Discord client lifecycle
-    ├── config.py         ← Settings từ biến môi trường
-    ├── llm.py            ← DeepSeek V4 Flash integration (async)
-    ├── rag.py            ← Hybrid search: BM25 + vector cosine + RRF
-    ├── agent.py          ← Tool-calling agent loop với 5 tools
-    ├── cog_qa.py         ← Slash commands + on_message handler
-    └── corrections.py    ← Lưu trữ & tra cứu user corrections
+ pyproject.toml
+ .env.example
+ bot/
+     __init__.py
+     main.py           ← Entry point, Discord client lifecycle
+     config.py         ← Settings từ biến môi trường
+     llm.py            ← DeepSeek V4 Flash integration (async)
+     rag.py            ← Hybrid search: BM25 + vector cosine + RRF
+     agent.py          ← Tool-calling agent loop với 5 tools
+     cog_qa.py         ← Slash commands + on_message handler
+     corrections.py    ← Lưu trữ & tra cứu user corrections
 ```
 
 ## Luồng hoạt động

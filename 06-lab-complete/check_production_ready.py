@@ -8,7 +8,7 @@ import sys
 
 
 def check(name: str, passed: bool, detail: str = "") -> dict:
-    icon = "✅" if passed else "❌"
+    icon = "" if passed else ""
     print(f"  {icon} {name}" + (f" — {detail}" if detail else ""))
     return {"name": name, "passed": passed}
 
@@ -25,15 +25,15 @@ def run_checks():
     print("  Production Readiness Check — Discord Class Bot")
     print("=" * 55)
 
-    # ── Required Files ──
-    print("\n📁 Required Files")
+    #  Required Files 
+    print("\n Required Files")
     for f in ["Dockerfile", "docker-compose.yml", ".dockerignore",
               ".env.example", "requirements.txt", "pyproject.toml",
               "railway.toml", "render.yaml"]:
         results.append(check(f"{f} exists", check_file(base, f)))
 
-    # ── Bot Structure ──
-    print("\n🤖 Bot Structure")
+    #  Bot Structure 
+    print("\n Bot Structure")
     bot_files = [
         "bot/__init__.py", "bot/main.py", "bot/config.py",
         "bot/llm.py", "bot/agent.py", "bot/cog_qa.py",
@@ -43,8 +43,8 @@ def run_checks():
         exists = check_file(base, f)
         results.append(check(f"  {f}", exists, "" if exists else "Missing!"))
 
-    # ── Security ──
-    print("\n🔒 Security")
+    #  Security 
+    print("\n Security")
     gitignore = os.path.join(base, "..", ".gitignore")
     env_ignored = False
     if os.path.exists(gitignore):
@@ -67,8 +67,8 @@ def run_checks():
                          len(secrets_found) == 0,
                          str(secrets_found) if secrets_found else ""))
 
-    # ── Docker ──
-    print("\n🐳 Docker")
+    #  Docker 
+    print("\n Docker")
     dockerfile = os.path.join(base, "Dockerfile")
     if os.path.exists(dockerfile):
         content = open(dockerfile).read()
@@ -86,8 +86,8 @@ def run_checks():
         results.append(check(".dockerignore covers __pycache__",
                              "__pycache__" in content))
 
-    # ── Config Validation ──
-    print("\n⚙️ Config")
+    #  Config Validation 
+    print("\n Config")
     config_py = os.path.join(base, "bot", "config.py")
     if os.path.exists(config_py):
         content = open(config_py).read()
@@ -98,7 +98,7 @@ def run_checks():
         for name, var in checks:
             results.append(check(f"  {name} configured", var in content))
 
-    # ── Summary ──
+    #  Summary 
     passed = sum(1 for r in results if r["passed"])
     total = len(results)
     pct = round(passed / total * 100)
@@ -107,13 +107,13 @@ def run_checks():
     print(f"  Result: {passed}/{total} checks passed ({pct}%)")
 
     if pct == 100:
-        print("  🎉 PRODUCTION READY! Deploy nào!")
+        print("   PRODUCTION READY! Deploy nào!")
     elif pct >= 80:
-        print("  ✅ Almost there! Fix the ❌ items above.")
+        print("   Almost there! Fix the  items above.")
     elif pct >= 60:
-        print("  ⚠️  Good progress. Several items need attention.")
+        print("    Good progress. Several items need attention.")
     else:
-        print("  ❌ Not ready. Review the checklist carefully.")
+        print("   Not ready. Review the checklist carefully.")
 
     print("=" * 55 + "\n")
     return pct == 100

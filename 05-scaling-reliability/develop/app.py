@@ -42,18 +42,18 @@ _in_flight_requests = 0  # đếm số request đang xử lý
 async def lifespan(app: FastAPI):
     global _is_ready
 
-    # ── Startup ──
+    #  Startup 
     logger.info("Agent starting up...")
     logger.info("Loading model and checking dependencies...")
     time.sleep(0.2)  # simulate startup time
     _is_ready = True
-    logger.info("✅ Agent is ready!")
+    logger.info(" Agent is ready!")
 
     yield
 
-    # ── Shutdown ──
+    #  Shutdown 
     _is_ready = False
-    logger.info("🔄 Graceful shutdown initiated...")
+    logger.info(" Graceful shutdown initiated...")
 
     # Chờ request đang xử lý hoàn thành (tối đa 30 giây)
     timeout = 30
@@ -63,7 +63,7 @@ async def lifespan(app: FastAPI):
         time.sleep(1)
         elapsed += 1
 
-    logger.info("✅ Shutdown complete")
+    logger.info(" Shutdown complete")
 
 
 app = FastAPI(title="Agent — Health Check Demo", lifespan=lifespan)
@@ -81,9 +81,9 @@ async def track_requests(request, call_next):
         _in_flight_requests -= 1
 
 
-# ──────────────────────────────────────────────────────────
+# 
 # Business Logic
-# ──────────────────────────────────────────────────────────
+# 
 
 @app.get("/")
 def root():
@@ -97,9 +97,9 @@ async def ask_agent(question: str):
     return {"answer": ask(question)}
 
 
-# ──────────────────────────────────────────────────────────
+# 
 # HEALTH CHECKS — Phần quan trọng nhất của file này
-# ──────────────────────────────────────────────────────────
+# 
 
 @app.get("/health")
 def health():
@@ -168,9 +168,9 @@ def ready():
     }
 
 
-# ──────────────────────────────────────────────────────────
+# 
 # GRACEFUL SHUTDOWN
-# ──────────────────────────────────────────────────────────
+# 
 
 def handle_sigterm(signum, frame):
     """
@@ -194,6 +194,6 @@ if __name__ == "__main__":
         app,
         host="0.0.0.0",
         port=port,
-        # ✅ Cho phép graceful shutdown
+        #  Cho phép graceful shutdown
         timeout_graceful_shutdown=30,
     )

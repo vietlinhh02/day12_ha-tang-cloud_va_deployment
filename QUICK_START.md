@@ -1,16 +1,16 @@
-# ⚡ Quick Start — Get Started in 5 Minutes
+#  Quick Start — Get Started in 5 Minutes
 
 > Jump right into the lab without reading everything first
 
 ---
 
-## 🎯 Goal
+##  Goal
 
 Deploy your first AI agent to the cloud in under 30 minutes.
 
 ---
 
-## ✅ Prerequisites Check
+##  Prerequisites Check
 
 Run these commands to verify you're ready:
 
@@ -31,7 +31,7 @@ If any command fails, install the missing tool first.
 
 ---
 
-## 🚀 Fast Track (30 minutes)
+##  Fast Track (30 minutes)
 
 ### Step 1: Clone & Setup (2 minutes)
 
@@ -59,7 +59,7 @@ curl http://localhost:8000/ask -X POST \
   -d '{"question": "Hello"}'
 ```
 
-**Expected:** You get a response! 🎉
+**Expected:** You get a response! 
 
 **Stop the server:** Press `Ctrl+C`
 
@@ -82,7 +82,7 @@ curl http://localhost:8000/ask -X POST \
   -d '{"question": "What is Docker?"}'
 ```
 
-**Expected:** Same response, but now in a container! 🐳
+**Expected:** Same response, but now in a container! 
 
 **Stop:** `Ctrl+C` or `docker stop <container-id>`
 
@@ -116,7 +116,7 @@ curl https://your-agent.railway.app/ask -X POST \
   -d '{"question": "Am I on the cloud?"}'
 ```
 
-**Expected:** Response from the cloud! 🌐
+**Expected:** Response from the cloud! 
 
 ### Step 5: Add Security (10 minutes)
 
@@ -149,18 +149,18 @@ curl http://localhost:8000/ask -X POST \
 
 ---
 
-## 🎓 What You Just Did
+##  What You Just Did
 
-1. ✅ Ran an AI agent locally
-2. ✅ Containerized it with Docker
-3. ✅ Deployed it to the cloud
-4. ✅ Added API key authentication
+1.  Ran an AI agent locally
+2.  Containerized it with Docker
+3.  Deployed it to the cloud
+4.  Added API key authentication
 
-**Congratulations!** You've completed the basics. 🎉
+**Congratulations!** You've completed the basics. 
 
 ---
 
-## 📚 Next Steps
+##  Next Steps
 
 Now that you've seen it work, go deeper:
 
@@ -192,7 +192,7 @@ Browse through each section's `develop/` and `production/` folders.
 
 ---
 
-## 🆘 Stuck?
+##  Stuck?
 
 ### Common Issues
 
@@ -232,22 +232,22 @@ pip install -r requirements.txt
 
 ---
 
-## 📖 Documentation Map
+##  Documentation Map
 
 ```
 START HERE
     ↓
 QUICK_START.md (you are here)
     ↓
-    ├─→ Want full tutorial? → CODE_LAB.md
-    ├─→ Need commands? → QUICK_REFERENCE.md
-    ├─→ Hit an error? → TROUBLESHOOTING.md
-    └─→ Want motivation? → LEARNING_PATH.md
+    → Want full tutorial? → CODE_LAB.md
+    → Need commands? → QUICK_REFERENCE.md
+    → Hit an error? → TROUBLESHOOTING.md
+    → Want motivation? → LEARNING_PATH.md
 ```
 
 ---
 
-## 💡 Pro Tips
+##  Pro Tips
 
 ### Tip 1: Use Multiple Terminals
 
@@ -300,7 +300,7 @@ export $(cat .env | xargs)
 
 ---
 
-## 🎯 Success Checklist
+##  Success Checklist
 
 After Quick Start, you should be able to:
 
@@ -312,11 +312,11 @@ After Quick Start, you should be able to:
 - [ ] Add API authentication
 - [ ] Test with curl
 
-If you checked all boxes, you're ready for the full lab! 🚀
+If you checked all boxes, you're ready for the full lab! 
 
 ---
 
-## 🏃 Speed Run Challenge
+##  Speed Run Challenge
 
 Think you're fast? Try this:
 
@@ -330,32 +330,32 @@ Think you're fast? Try this:
 5. Must work when tested
 
 **Leaderboard:**
-- 🥇 < 10 minutes: Deployment Master
-- 🥈 10-15 minutes: Speed Demon
-- 🥉 15-20 minutes: Quick Learner
-- 📚 > 20 minutes: Keep practicing!
+-  < 10 minutes: Deployment Master
+-  10-15 minutes: Speed Demon
+-  15-20 minutes: Quick Learner
+-  > 20 minutes: Keep practicing!
 
 ---
 
-## 🎓 Learning Modes
+##  Learning Modes
 
 Choose your style:
 
-### 🐢 Turtle Mode (Recommended for beginners)
+###  Turtle Mode (Recommended for beginners)
 - Read everything carefully
 - Do all exercises
 - Understand before moving on
 - **Time:** 4 hours
 - **Retention:** High
 
-### 🐇 Rabbit Mode (For experienced developers)
+###  Rabbit Mode (For experienced developers)
 - Skim documentation
 - Run examples
 - Jump to final project
 - **Time:** 1.5 hours
 - **Retention:** Medium
 
-### 🚀 Rocket Mode (For experts)
+###  Rocket Mode (For experts)
 - Read requirements only
 - Build from scratch
 - Reference docs when stuck
@@ -364,45 +364,45 @@ Choose your style:
 
 ---
 
-## 📊 Progress Tracking
+##  Progress Tracking
 
 Mark your progress:
 
 ```
 Day 12 Lab Progress
-═══════════════════
+
 
 Quick Start
-├─ [✓] Run local agent
-├─ [✓] Docker basics
-├─ [✓] Deploy to cloud
-└─ [✓] Add security
+ [] Run local agent
+ [] Docker basics
+ [] Deploy to cloud
+ [] Add security
 
 Full Lab
-├─ [ ] Part 1: Localhost vs Production
-├─ [ ] Part 2: Docker
-├─ [ ] Part 3: Cloud Deployment
-├─ [ ] Part 4: API Security
-├─ [ ] Part 5: Scaling & Reliability
-└─ [ ] Part 6: Final Project
+ [ ] Part 1: Localhost vs Production
+ [ ] Part 2: Docker
+ [ ] Part 3: Cloud Deployment
+ [ ] Part 4: API Security
+ [ ] Part 5: Scaling & Reliability
+ [ ] Part 6: Final Project
 
 Status: 4/10 complete (40%)
 ```
 
 ---
 
-## 🎉 Celebrate Small Wins
+##  Celebrate Small Wins
 
-- ✅ First successful curl? → You're a tester!
-- ✅ First Docker build? → You're a containerizer!
-- ✅ First deployment? → You're a cloud engineer!
-- ✅ First secured API? → You're a security expert!
+-  First successful curl? → You're a tester!
+-  First Docker build? → You're a containerizer!
+-  First deployment? → You're a cloud engineer!
+-  First secured API? → You're a security expert!
 
-Every step counts. Keep going! 💪
+Every step counts. Keep going! 
 
 ---
 
-## 🔗 Quick Links
+##  Quick Links
 
 - **Full Lab:** [CODE_LAB.md](CODE_LAB.md)
 - **Commands:** [QUICK_REFERENCE.md](QUICK_REFERENCE.md)
@@ -412,4 +412,4 @@ Every step counts. Keep going! 💪
 
 ---
 
-**Ready for more? Open [CODE_LAB.md](CODE_LAB.md) and dive deep! 🏊**
+**Ready for more? Open [CODE_LAB.md](CODE_LAB.md) and dive deep! **

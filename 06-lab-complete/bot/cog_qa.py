@@ -17,7 +17,7 @@ from bot.rag import RAGStore
 
 log = logging.getLogger(__name__)
 
-# ── palette ────────────────────────────────────────────────────────────────
+#  palette 
 
 _CONFIDENCE_COLORS = {
     "high": 0x2ECC71,     # emerald green
@@ -25,9 +25,9 @@ _CONFIDENCE_COLORS = {
     "low": 0xE74C3C,      # soft red
 }
 _CONFIDENCE_BADGE = {
-    "high": "🔬 Cao",
-    "medium": "🧐 Trung bình",
-    "low": "🌫️ Thấp",
+    "high": " Cao",
+    "medium": " Trung bình",
+    "low": " Thấp",
 }
 _SUMMARY_COLOR = 0x9B59B6   # purple
 _CORRECT_COLOR = 0x2ECC71   # green
@@ -48,7 +48,7 @@ def _compact_sources(sources: list[dict]) -> list[str]:
 
     lines: list[str] = []
     for (author, is_instructor), links in groups.items():
-        badge = "👨‍🏫" if is_instructor else "🧑‍🎓"
+        badge = "" if is_instructor else ""
         count_suffix = f" — {len(links)} msg" if len(links) > 1 else ""
         link_parts = []
         for i, link in enumerate(links):
@@ -58,7 +58,7 @@ def _compact_sources(sources: list[dict]) -> list[str]:
     return lines
 
 
-# ── embed builders ─────────────────────────────────────────────────────────
+#  embed builders 
 
 
 def _build_answer_embed(
@@ -69,7 +69,7 @@ def _build_answer_embed(
 ) -> discord.Embed:
     """Build a polished embed for an agent answer."""
     color = _CONFIDENCE_COLORS.get(response.confidence, 0x3498DB)
-    badge = _CONFIDENCE_BADGE.get(response.confidence, "🧐 Trung bình")
+    badge = _CONFIDENCE_BADGE.get(response.confidence, " Trung bình")
 
     embed = discord.Embed(
         description=response.answer,
@@ -91,7 +91,7 @@ def _build_answer_embed(
     # Question field
     truncated_q = question[:256] + ("…" if len(question) > 256 else "")
     embed.add_field(
-        name=f"💭 Câu hỏi từ {user.display_name}",
+        name=f" Câu hỏi từ {user.display_name}",
         value=truncated_q,
         inline=False,
     )
@@ -100,7 +100,7 @@ def _build_answer_embed(
     if response.sources:
         source_lines: list[str] = _compact_sources(response.sources[:5])
         embed.add_field(
-            name="📖 Nguồn tham khảo",
+            name=" Nguồn tham khảo",
             value="\n".join(source_lines),
             inline=False,
         )
@@ -133,7 +133,7 @@ def _build_summary_embed(
         embed.set_thumbnail(url=bot_user.display_avatar.url)
 
     embed.add_field(
-        name="🏷️ Chủ đề",
+        name=" Chủ đề",
         value=topic[:256],
         inline=False,
     )
@@ -141,7 +141,7 @@ def _build_summary_embed(
     if response.sources:
         source_lines: list[str] = _compact_sources(response.sources[:8])
         embed.add_field(
-            name="📖 Nguồn tham khảo",
+            name=" Nguồn tham khảo",
             value="\n".join(source_lines),
             inline=False,
         )
@@ -164,13 +164,13 @@ def _build_correction_embed(
             name="VinUni Assistant — Sửa lỗi",
             icon_url=bot_user.display_avatar.url,
         )
-    embed.add_field(name="⚠️ Thông tin sai", value=original[:1024], inline=False)
-    embed.add_field(name="💡 Thông tin đúng", value=correction[:1024], inline=False)
+    embed.add_field(name=" Thông tin sai", value=original[:1024], inline=False)
+    embed.add_field(name=" Thông tin đúng", value=correction[:1024], inline=False)
     embed.set_footer(text=f"Được sửa bởi {user.display_name}")
     return embed
 
 
-# ── helpers ────────────────────────────────────────────────────────────────
+#  helpers 
 
 
 def _safe_followup(interaction: discord.Interaction):
@@ -242,7 +242,7 @@ async def _fetch_messages(
     return messages
 
 
-# ── cog ────────────────────────────────────────────────────────────────────
+#  cog 
 
 
 class QACog(commands.Cog):
@@ -270,7 +270,7 @@ class QACog(commands.Cog):
                     log.info("Pre-loading history for channel %s …", channel_id)
                     await self._load_history(channel_id)
 
-    # ── message listener (real-time indexing + mention replies) ─────────────
+    #  message listener (real-time indexing + mention replies) 
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message) -> None:
@@ -279,7 +279,7 @@ class QACog(commands.Cog):
         if not message.guild:
             return
 
-        # ── Real-time indexing: only index messages in target channels ──
+        #  Real-time indexing: only index messages in target channels 
         if message.channel.id in self.settings.target_channel_ids:
             rag = self._get_rag(message.channel.id)
             if rag.chunks:  # only index if channel was already loaded
@@ -291,7 +291,7 @@ class QACog(commands.Cog):
                         rag.save_to_cache(message.channel.id)
                         log.info("Auto-flushed %d new chunks for channel %s", new_chunks, message.channel.id)
 
-        # ── Mention reply ──
+        #  Mention reply 
         if self.bot.user not in message.mentions:
             return
 
@@ -302,15 +302,15 @@ class QACog(commands.Cog):
 
         if not question:
             await message.reply(
-                "👋 Chào bạn! Hãy hỏi tôi bằng cách mention + câu hỏi.\n"
+                " Chào bạn! Hãy hỏi tôi bằng cách mention + câu hỏi.\n"
                 "Ví dụ: `@VinUni có bài tập gì không?`"
             )
             return
 
         _greetings = {"hi", "hello", "hí", "chào", "hey", "hế lô", "hí ae", "alo"}
-        if question.lower().strip().rstrip("!？?!.") in _greetings:
+        if question.lower().strip().rstrip("!?!.") in _greetings:
             await message.reply(
-                "👋 Chào bạn! Mình là VinUni Assistant, hỏi mình gì về lớp học đi nè 😄"
+                " Chào bạn! Mình là VinUni Assistant, hỏi mình gì về lớp học đi nè "
             )
             return
 
@@ -319,7 +319,7 @@ class QACog(commands.Cog):
         rag = self._get_rag(source_channel_id)
 
         if not rag.chunks:
-            status_msg = await message.reply("🔄 Đang tải lịch sử chat... (lần đầu)")
+            status_msg = await message.reply(" Đang tải lịch sử chat... (lần đầu)")
             await self._load_history(source_channel_id)
             try:
                 await status_msg.delete()
@@ -378,7 +378,7 @@ class QACog(commands.Cog):
                     pass
             asyncio.create_task(_auto_delete())
 
-    # ── /ask (kept for discoverability) ─────────────────────────────────────
+    #  /ask (kept for discoverability) 
 
     @app_commands.command(name="ask", description="Hỏi AI về nội dung đã trao đổi trong kênh chat")
     @app_commands.describe(question="Câu hỏi của bạn")
@@ -394,7 +394,7 @@ class QACog(commands.Cog):
         channel_id = self._resolve_source_channel(interaction.channel_id)
         rag = self._get_rag(channel_id)
         if not rag.chunks:
-            await send("🔄 Đang tải lịch sử chat... (lần đầu)")
+            await send(" Đang tải lịch sử chat... (lần đầu)")
             await self._load_history(channel_id)
         else:
             await self._load_history(channel_id)
@@ -415,7 +415,7 @@ class QACog(commands.Cog):
         )
         await send(embed=embed, delete_after=self.settings.auto_delete_seconds)
 
-    # ── /summary ────────────────────────────────────────────────────────────
+    #  /summary 
 
     @app_commands.command(name="summary", description="Tóm tắt một chủ đề từ lịch sử chat")
     @app_commands.describe(topic="Chủ đề cần tóm tắt (VD: 'buổi học hôm qua', 'bài tập tuần 3')")
@@ -431,7 +431,7 @@ class QACog(commands.Cog):
         channel_id = self._resolve_source_channel(interaction.channel_id)
         rag = self._get_rag(channel_id)
         if not rag.chunks:
-            await send("🔄 Đang tải lịch sử chat...")
+            await send(" Đang tải lịch sử chat...")
             await self._load_history(channel_id)
         else:
             await self._load_history(channel_id)
@@ -451,7 +451,7 @@ class QACog(commands.Cog):
         embed = _build_summary_embed(response, topic, self.bot.user)
         await send(embed=embed)
 
-    # ── /correct ────────────────────────────────────────────────────────────
+    #  /correct 
 
     @app_commands.command(name="correct", description="Sửa lỗi thông tin AI đã trả lời")
     @app_commands.describe(
@@ -483,7 +483,7 @@ class QACog(commands.Cog):
         )
         await send(embed=embed)
 
-    # ── /reload ─────────────────────────────────────────────────────────────
+    #  /reload 
 
     @app_commands.command(name="reload", description="Tải lại lịch sử chat từ kênh")
     async def reload_command(self, interaction: discord.Interaction) -> None:
@@ -500,9 +500,9 @@ class QACog(commands.Cog):
         rag.last_timestamp = ""  # force full rebuild
         await self._load_history(channel_id)
 
-        await send(f"✨ Đã tải lại {len(rag.chunks)} chunks từ kênh.")
+        await send(f" Đã tải lại {len(rag.chunks)} chunks từ kênh.")
 
-    # ── history loader (incremental) ────────────────────────────────────────
+    #  history loader (incremental) 
 
     async def _load_history(self, channel_id: int) -> None:
         """Fetch messages from Discord, incremental if already have cached data.

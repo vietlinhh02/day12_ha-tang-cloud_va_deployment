@@ -27,8 +27,8 @@ COPY --from=builder /root/.local /home/bot/.local
 # Copy application code
 COPY bot/ ./bot/
 COPY pyproject.toml .
-COPY corrections.json ./corrections.json
 
+RUN mkdir -p /app/data
 RUN chown -R bot:bot /app
 
 USER bot

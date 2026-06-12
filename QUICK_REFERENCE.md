@@ -1,10 +1,10 @@
-# 📖 Quick Reference — Deployment Cheat Sheet
+#  Quick Reference — Deployment Cheat Sheet
 
 > Tài liệu tra cứu nhanh cho Day 12 Lab
 
 ---
 
-## 🐳 Docker Commands
+##  Docker Commands
 
 ### Build & Run
 
@@ -70,7 +70,7 @@ docker system prune -a --volumes
 
 ---
 
-## 🎼 Docker Compose Commands
+##  Docker Compose Commands
 
 ```bash
 # Start services
@@ -99,7 +99,7 @@ docker compose up --build
 
 ---
 
-## 🚂 Railway Commands
+##  Railway Commands
 
 ```bash
 # Install CLI
@@ -135,7 +135,7 @@ railway run <command>
 
 ---
 
-## 🎨 Render Deployment
+##  Render Deployment
 
 ### Via Dashboard
 
@@ -175,7 +175,7 @@ services:
 
 ---
 
-## 🔐 Environment Variables Best Practices
+##  Environment Variables Best Practices
 
 ### .env file
 
@@ -219,7 +219,7 @@ settings = Settings()
 
 ---
 
-## 🏥 Health Check Patterns
+##  Health Check Patterns
 
 ### Liveness Probe
 
@@ -263,7 +263,7 @@ services:
 
 ---
 
-## 🔒 Authentication Patterns
+##  Authentication Patterns
 
 ### API Key
 
@@ -305,7 +305,7 @@ def verify_token(token: str = Depends(oauth2_scheme)):
 
 ---
 
-## ⏱️ Rate Limiting Patterns
+##  Rate Limiting Patterns
 
 ### Sliding Window (Redis)
 
@@ -356,7 +356,7 @@ def check_rate_limit_token_bucket(user_id: str, rate: int = 10):
 
 ---
 
-## 💰 Cost Guard Pattern
+##  Cost Guard Pattern
 
 ```python
 def check_budget(user_id: str, estimated_cost: float, monthly_limit: float = 10.0):
@@ -382,7 +382,7 @@ def check_budget(user_id: str, estimated_cost: float, monthly_limit: float = 10.
 
 ---
 
-## 🔄 Graceful Shutdown Pattern
+##  Graceful Shutdown Pattern
 
 ```python
 import signal
@@ -414,7 +414,7 @@ async def shutdown():
 
 ---
 
-## 📊 Structured Logging Pattern
+##  Structured Logging Pattern
 
 ```python
 import logging
@@ -447,7 +447,7 @@ logger.info("User request", extra={"user_id": "123", "endpoint": "/ask"})
 
 ---
 
-## 🎯 Dockerfile Best Practices
+##  Dockerfile Best Practices
 
 ### Multi-stage Build
 
@@ -507,7 +507,7 @@ venv/
 
 ---
 
-## 🧪 Testing Endpoints
+##  Testing Endpoints
 
 ### cURL
 
@@ -575,7 +575,7 @@ print(response.json())
 
 ---
 
-## 🔍 Debugging Tips
+##  Debugging Tips
 
 ### Check if port is in use
 
@@ -614,7 +614,7 @@ docker cp <container-id>:/app/logs/app.log ./local-app.log
 
 ---
 
-## 📈 Performance Tips
+##  Performance Tips
 
 ### Optimize Docker build
 
@@ -638,19 +638,19 @@ Giảm image size → deploy nhanh hơn.
 ### Use slim base images
 
 ```dockerfile
-# ❌ Large (1GB+)
+#  Large (1GB+)
 FROM python:3.11
 
-# ✅ Smaller (150MB)
+#  Smaller (150MB)
 FROM python:3.11-slim
 
-# ✅ Smallest (50MB, but harder to debug)
+#  Smallest (50MB, but harder to debug)
 FROM python:3.11-alpine
 ```
 
 ---
 
-## 🎓 12-Factor App Checklist
+##  12-Factor App Checklist
 
 - [ ] **I. Codebase:** One codebase tracked in Git
 - [ ] **II. Dependencies:** Explicitly declare (requirements.txt)
@@ -667,7 +667,7 @@ FROM python:3.11-alpine
 
 ---
 
-## 🆘 Common Errors & Solutions
+##  Common Errors & Solutions
 
 ### "Port already in use"
 
@@ -706,4 +706,4 @@ USER appuser
 
 ---
 
-**Keep this handy during the lab! 📌**
+**Keep this handy during the lab! **

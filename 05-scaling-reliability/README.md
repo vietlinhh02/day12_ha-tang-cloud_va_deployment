@@ -11,16 +11,16 @@ Hai kỹ năng cốt lõi để deploy AI Agent lên môi trường production:
 
 ```
 05-scaling-reliability/
-├── develop/          # Bước 1: Health check & graceful shutdown (chạy local)
-│   ├── app.py
-│   ├── requirements.txt
-│   └── utils/mock_llm.py
-└── production/       # Bước 2: Stateless agent + Redis + Nginx (Docker Compose)
-    ├── app.py
-    ├── docker-compose.yml
-    ├── nginx.conf
-    ├── test_stateless.py
-    └── utils/mock_llm.py
+ develop/          # Bước 1: Health check & graceful shutdown (chạy local)
+    app.py
+    requirements.txt
+    utils/mock_llm.py
+ production/       # Bước 2: Stateless agent + Redis + Nginx (Docker Compose)
+     app.py
+     docker-compose.yml
+     nginx.conf
+     test_stateless.py
+     utils/mock_llm.py
 ```
 
 ---
@@ -37,25 +37,25 @@ Hai kỹ năng cốt lõi để deploy AI Agent lên môi trường production:
 ### Kiến trúc bên trong `app.py`
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    FastAPI App                        │
-├─────────────────────────────────────────────────────┤
-│  Lifespan (startup/shutdown)                         │
-│    • Startup:  load model → _is_ready = True         │
-│    • Shutdown: _is_ready = False → chờ in-flight → exit│
-├─────────────────────────────────────────────────────┤
-│  Middleware: track_requests                          │
-│    • Mỗi request đến → _in_flight_requests += 1     │
-│    • Request xong    → _in_flight_requests -= 1     │
-├─────────────────────────────────────────────────────┤
-│  Endpoints                                           │
-│    • GET  /health  → liveness (status, uptime, mem)  │
-│    • GET  /ready   → readiness (503 nếu chưa sẵn sàng)│
-│    • POST /ask     → business logic (hỏi AI)        │
-├─────────────────────────────────────────────────────┤
-│  Signal Handlers                                     │
-│    • SIGTERM / SIGINT → log + uvicorn tự shutdown    │
-└─────────────────────────────────────────────────────┘
+
+                    FastAPI App                        
+
+  Lifespan (startup/shutdown)                         
+    • Startup:  load model → _is_ready = True         
+    • Shutdown: _is_ready = False → chờ in-flight → exit
+
+  Middleware: track_requests                          
+    • Mỗi request đến → _in_flight_requests += 1     
+    • Request xong    → _in_flight_requests -= 1     
+
+  Endpoints                                           
+    • GET  /health  → liveness (status, uptime, mem)  
+    • GET  /ready   → readiness (503 nếu chưa sẵn sàng)
+    • POST /ask     → business logic (hỏi AI)        
+
+  Signal Handlers                                     
+    • SIGTERM / SIGINT → log + uvicorn tự shutdown    
+
 ```
 
 ### Flow Graceful Shutdown
@@ -132,8 +132,8 @@ INFO:     Shutting down
 INFO:     127.0.0.1:... - "POST /ask?question=hello HTTP/1.1" 200 OK
 INFO:     127.0.0.1:... - "POST /ask?question=hello HTTP/1.1" 200 OK
 INFO:     Waiting for application shutdown.
-2026-06-10 ... INFO 🔄 Graceful shutdown initiated...
-2026-06-10 ... INFO ✅ Shutdown complete
+2026-06-10 ... INFO  Graceful shutdown initiated...
+2026-06-10 ... INFO  Shutdown complete
 INFO:     Application shutdown complete.
 INFO:     Finished server process [PID]
 2026-06-10 ... INFO Received signal 15 — uvicorn will handle graceful shutdown
@@ -182,15 +182,15 @@ t=3.0s  Request 1 & 2 hoàn thành → in_flight_requests = 0
 ### Vấn đề khi scale stateful
 
 ```
-Instance 1: User A → request 1 → lưu session trong memory ✅
-Instance 2: User A → request 2 → KHÔNG thấy session ❌ Bug!
+Instance 1: User A → request 1 → lưu session trong memory 
+Instance 2: User A → request 2 → KHÔNG thấy session  Bug!
 ```
 
 ### Giải pháp: Stateless + Redis
 
 ```
-Instance 1: User A → request 1 → lưu session vào Redis ✅
-Instance 2: User A → request 2 → đọc session từ Redis ✅
+Instance 1: User A → request 1 → lưu session vào Redis 
+Instance 2: User A → request 2 → đọc session từ Redis 
 ```
 
 Bất kỳ instance nào cũng phục vụ được bất kỳ user nào.
@@ -227,8 +227,8 @@ Request 1: [instance-a1b2c3]  ← instance khác nhau
 Request 2: [instance-d4e5f6]
 Request 3: [instance-a1b2c3]
 
-✅ All requests served despite different instances!
-✅ Session history preserved across all instances via Redis!
+ All requests served despite different instances!
+ Session history preserved across all instances via Redis!
 ```
 
 ### API

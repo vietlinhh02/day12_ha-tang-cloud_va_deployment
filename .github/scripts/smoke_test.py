@@ -15,10 +15,10 @@ import importlib
 def test_import(module_name: str) -> bool:
     try:
         importlib.import_module(module_name)
-        print(f"  ✅ {module_name} — imports OK")
+        print(f"   {module_name} — imports OK")
         return True
     except Exception as e:
-        print(f"  ❌ {module_name} — {e}")
+        print(f"   {module_name} — {e}")
         return False
 
 
@@ -63,11 +63,11 @@ def test_all() -> int:
         assert s.deepseek_api_key == "test-key"
         assert s.target_channel_ids == [123, 456]
         assert s.instructor_ids == ["789"]
-        print(f"  ✅ Config parsing — OK")
+        print(f"   Config parsing — OK")
         passed += 1
         total += 1
     except Exception as e:
-        print(f"  ❌ Config parsing — {e}")
+        print(f"   Config parsing — {e}")
 
     # Clean up env
     for k in ["DISCORD_TOKEN", "DEEPSEEK_API_KEY", "TARGET_CHANNEL_IDS", "INSTRUCTOR_IDS"]:
@@ -75,10 +75,10 @@ def test_all() -> int:
 
     print(f"\n  Result: {passed}/{total} tests passed")
     if passed == total:
-        print("  🎉 All smoke tests passed!")
+        print("   All smoke tests passed!")
         return 0
     else:
-        print("  ❌ Some tests failed!")
+        print("   Some tests failed!")
         return 1
 
 

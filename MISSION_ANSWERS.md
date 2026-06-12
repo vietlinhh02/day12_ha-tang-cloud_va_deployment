@@ -1,6 +1,6 @@
 # MISSION_ANSWERS.md — Day 12: Hạ Tầng Cloud & Deployment
 
-## 📌 Tổng quan
+##  Tổng quan
 
 Hoàn thành tất cả 6 parts của Code Lab: Deploy AI Agent to Production.
 Kiến trúc cuối cùng:
@@ -32,12 +32,12 @@ Client → Nginx (LB) → Agent × 3 → Redis
 |---------|-------|----------|
 | Config | Hardcode trong code | `config.py` đọc từ env vars |
 | Port | Cố định 8001 | Từ `PORT` env var |
-| Health check | ❌ 404 | ✅ `GET /health` |
-| Readiness | ❌ | ✅ `GET /ready` |
+| Health check |  404 |  `GET /health` |
+| Readiness |  |  `GET /ready` |
 | Logging | `print()` | JSON structured |
 | Shutdown | Đột ngột | Graceful |
 | Port binding | `localhost:8001` | `0.0.0.0` + `$PORT` |
-| CORS | ❌ | ✅ CORS middleware |
+| CORS |  |  CORS middleware |
 
 ---
 
@@ -56,7 +56,7 @@ EXPOSE 8000
 CMD ["python", "app.py"]
 ```
 
-- **Image size:** 1.66 GB ❌ Rất lớn
+- **Image size:** 1.66 GB  Rất lớn
 
 ### 2.2 Multi-stage Dockerfile (`02-docker/production/Dockerfile`)
 
@@ -81,7 +81,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
 ```
 
-- **Image size:** 236 MB ✅ Tiết kiệm ~86%
+- **Image size:** 236 MB  Tiết kiệm ~86%
 
 ### 2.3 Docker Compose stack (`02-docker/production/docker-compose.yml`)
 
@@ -363,24 +363,24 @@ if __name__ == "__main__":
 ### Kết quả validation
 
 ```
-📁 Required Files     ✅ 6/6
-🔒 Security           ✅ 2/2
-🌐 API Endpoints      ✅ 6/6
-🐳 Docker             ✅ 6/6
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎉 20/20 checks passed (100%) — PRODUCTION READY!
+ Required Files      6/6
+ Security            2/2
+ API Endpoints       6/6
+ Docker              6/6
+
+ 20/20 checks passed (100%) — PRODUCTION READY!
 ```
 
 ---
 
-## 🏆 Tổng kết
+##  Tổng kết
 
 | Criteria | Points | Đạt được |
 |----------|--------|----------|
-| Functionality | 20 | ✅ Agent hoạt động, REST API đầy đủ |
-| Docker | 15 | ✅ Multi-stage, non-root, HEALTHCHECK |
-| Security | 20 | ✅ API Key auth + Rate limiting + Cost guard |
-| Reliability | 20 | ✅ Health checks + Graceful shutdown |
-| Scalability | 15 | ✅ Stateless + Load balanced (Nginx × 3) |
-| Deployment | 10 | ✅ Railway.toml + render.yaml sẵn sàng |
-| **Total** | **100** | **✅** |
+| Functionality | 20 |  Agent hoạt động, REST API đầy đủ |
+| Docker | 15 |  Multi-stage, non-root, HEALTHCHECK |
+| Security | 20 |  API Key auth + Rate limiting + Cost guard |
+| Reliability | 20 |  Health checks + Graceful shutdown |
+| Scalability | 15 |  Stateless + Load balanced (Nginx × 3) |
+| Deployment | 10 |  Railway.toml + render.yaml sẵn sàng |
+| **Total** | **100** | **** |

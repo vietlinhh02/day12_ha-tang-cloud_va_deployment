@@ -1,6 +1,6 @@
 # DEPLOYMENT.md
 
-## 🚀 Hướng dẫn Deploy Production AI Agent
+##  Hướng dẫn Deploy Production AI Agent
 
 ### 1. Deploy lên Railway
 

@@ -1,10 +1,10 @@
-# 🗺️ Learning Path — Day 12 Deployment Lab
+#  Learning Path — Day 12 Deployment Lab
 
 > Visual guide to your deployment journey
 
 ---
 
-## 🎯 Your Mission
+##  Your Mission
 
 Transform a localhost AI agent into a **production-ready cloud service** that can handle real users.
 
@@ -12,15 +12,15 @@ Transform a localhost AI agent into a **production-ready cloud service** that ca
 Localhost Agent          Production Agent
      (Day 1)      →→→→→      (Day 12)
       
-   💻 Local           🌐 Cloud
-   🔓 Insecure        🔒 Secure  
-   🐌 Single          ⚡ Scalable
-   💥 Fragile         🛡️ Reliable
+    Local            Cloud
+    Insecure         Secure  
+    Single           Scalable
+    Fragile          Reliable
 ```
 
 ---
 
-## 📖 The Story
+##  The Story
 
 ### Chapter 1: The Problem (Part 1)
 
@@ -28,8 +28,8 @@ Localhost Agent          Production Agent
 
 ```python
 # Your code
-api_key = "sk-abc123"  # 😱
-app.run(port=8000)     # 🔒 Hardcoded
+api_key = "sk-abc123"  # 
+app.run(port=8000)     #  Hardcoded
 ```
 
 **Problem:** 
@@ -42,8 +42,8 @@ app.run(port=8000)     # 🔒 Hardcoded
 
 ```python
 # Better code
-api_key = os.getenv("OPENAI_API_KEY")  # ✅
-port = int(os.getenv("PORT", 8000))    # ✅
+api_key = os.getenv("OPENAI_API_KEY")  # 
+port = int(os.getenv("PORT", 8000))    # 
 ```
 
 **You learn:** Dev ≠ Production
@@ -73,7 +73,7 @@ CMD ["python", "app.py"]
 
 ```
 Your Laptop → Docker Image → Cloud
-   ✅             ✅            ✅
+                            
 ```
 
 **You learn:** Containerization
@@ -112,10 +112,10 @@ User in USA     → Internet → Your Agent on Railway
 **Scene:** Your agent is public. Someone finds your URL.
 
 ```
-💸 Your OpenAI bill: $0.50
-💸 Your OpenAI bill: $5.00
-💸 Your OpenAI bill: $50.00
-💸 Your OpenAI bill: $500.00  😱
+ Your OpenAI bill: $0.50
+ Your OpenAI bill: $5.00
+ Your OpenAI bill: $50.00
+ Your OpenAI bill: $500.00  
 ```
 
 **Problem:**
@@ -148,7 +148,7 @@ if spending > $10/month:
 **Scene:** Your agent is popular! But one instance can't handle the load.
 
 ```
-100 users → 1 agent → 💥 Crash
+100 users → 1 agent →  Crash
 ```
 
 **Problem:**
@@ -159,9 +159,9 @@ if spending > $10/month:
 **Solution:** Scale out
 
 ```
-                  ┌─→ Agent 1
-100 users → LB ───┼─→ Agent 2
-                  └─→ Agent 3
+                  → Agent 1
+100 users → LB → Agent 2
+                  → Agent 3
 ```
 
 **But wait!** If Agent 1 stores conversation in memory, and next request goes to Agent 2...
@@ -174,10 +174,10 @@ User: "What's my name?"   → Agent 2 (doesn't know!)
 **Solution:** Stateless design
 
 ```python
-# ❌ State in memory
+#  State in memory
 conversations = {}
 
-# ✅ State in Redis
+#  State in Redis
 r.set(f"conv:{user_id}", data)
 ```
 
@@ -192,34 +192,34 @@ r.set(f"conv:{user_id}", data)
 **Challenge:** Build a production-ready agent from scratch
 
 **Requirements:**
-- ✅ Dockerized
-- ✅ Configured via env vars
-- ✅ Secured with auth
-- ✅ Rate limited
-- ✅ Cost protected
-- ✅ Health checks
-- ✅ Stateless
-- ✅ Deployed to cloud
+-  Dockerized
+-  Configured via env vars
+-  Secured with auth
+-  Rate limited
+-  Cost protected
+-  Health checks
+-  Stateless
+-  Deployed to cloud
 
-**Reward:** A real production service! 🎉
+**Reward:** A real production service! 
 
 ---
 
-## 🎓 Skills You'll Gain
+##  Skills You'll Gain
 
 ### Technical Skills
 
 ```
-┌─────────────────────────────────────┐
-│  Before Lab    │    After Lab       │
-├────────────────┼────────────────────┤
-│ Run on laptop  │ Deploy to cloud    │
-│ Hardcode stuff │ Use env vars       │
-│ No security    │ Auth + rate limit  │
-│ Single process │ Scale horizontally │
-│ Hope it works  │ Health checks      │
-│ Manual setup   │ Docker automation  │
-└─────────────────────────────────────┘
+
+  Before Lab        After Lab       
+
+ Run on laptop   Deploy to cloud    
+ Hardcode stuff  Use env vars       
+ No security     Auth + rate limit  
+ Single process  Scale horizontally 
+ Hope it works   Health checks      
+ Manual setup    Docker automation  
+
 ```
 
 ### Concepts Mastered
@@ -233,7 +233,7 @@ r.set(f"conv:{user_id}", data)
 
 ---
 
-## 🛤️ The Path
+##  The Path
 
 ```
 Part 1: Localhost vs Production (30 min)
@@ -260,12 +260,12 @@ Part 6: Final Project (60 min)
    ↓
    Build: Production-ready agent
    ↓
-   🎉 SUCCESS! You're a deployment engineer!
+    SUCCESS! You're a deployment engineer!
 ```
 
 ---
 
-## 📊 Progress Tracker
+##  Progress Tracker
 
 Use this to track your progress:
 
@@ -308,7 +308,7 @@ Use this to track your progress:
 
 ---
 
-## 🎯 Success Criteria
+##  Success Criteria
 
 You'll know you've succeeded when:
 
@@ -320,7 +320,7 @@ You'll know you've succeeded when:
 
 ---
 
-## 💡 Key Insights
+##  Key Insights
 
 ### Insight 1: Production ≠ Localhost
 
@@ -341,12 +341,12 @@ Production:
 ### Insight 2: Stateless is Key
 
 ```
-Stateful (❌):
+Stateful ():
 - State in memory
 - Can't scale
 - Lose data on restart
 
-Stateless (✅):
+Stateless ():
 - State in database/Redis
 - Scale infinitely
 - Survive restarts
@@ -386,7 +386,7 @@ Automated deployment:
 
 ---
 
-## 🚀 Beyond This Lab
+##  Beyond This Lab
 
 After completing this lab, you can:
 
@@ -411,7 +411,7 @@ After completing this lab, you can:
 
 ---
 
-## 📚 Resources
+##  Resources
 
 ### During Lab
 - [CODE_LAB.md](CODE_LAB.md) — Step-by-step guide
@@ -426,7 +426,7 @@ After completing this lab, you can:
 
 ---
 
-## 🎉 Motivation
+##  Motivation
 
 > "The best way to learn is by doing."
 
@@ -438,11 +438,11 @@ This lab is challenging, but you'll learn more in 4 hours than in weeks of readi
 - Ask for help when stuck
 - Celebrate small wins
 
-**You got this! 💪**
+**You got this! **
 
 ---
 
-## 🏆 Hall of Fame
+##  Hall of Fame
 
 After completing the lab, you'll join the ranks of students who can:
 - Deploy production services
@@ -451,8 +451,8 @@ After completing the lab, you'll join the ranks of students who can:
 - Debug cloud issues
 - Ship code confidently
 
-**Welcome to the world of production engineering! 🌟**
+**Welcome to the world of production engineering! **
 
 ---
 
-**Ready to start? Open [CODE_LAB.md](CODE_LAB.md) and begin your journey! 🚀**
+**Ready to start? Open [CODE_LAB.md](CODE_LAB.md) and begin your journey! **

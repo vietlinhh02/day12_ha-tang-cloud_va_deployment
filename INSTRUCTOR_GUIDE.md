@@ -1,10 +1,10 @@
-# 👨‍🏫 Instructor Guide — Day 12 Lab Assessment
+#  Instructor Guide — Day 12 Lab Assessment
 
 > Hướng dẫn chấm điểm và đánh giá cho giảng viên
 
 ---
 
-## 📊 Grading Overview
+##  Grading Overview
 
 | Component | Points | Weight |
 |-----------|--------|--------|
@@ -35,7 +35,7 @@
 | Feature | Basic | Advanced | Tại sao quan trọng? |
 |---------|-------|----------|---------------------|
 | Config | Hardcode | Env vars | Dễ thay đổi giữa environments, không commit secrets |
-| Health check | ❌ | ✅ | Platform biết khi nào restart, monitoring |
+| Health check |  |  | Platform biết khi nào restart, monitoring |
 | Logging | print() | JSON | Structured logs dễ parse, search, analyze |
 | Shutdown | Đột ngột | Graceful | Không mất data, hoàn thành requests |
 
@@ -145,7 +145,7 @@ def test_rate_limit():
 if __name__ == "__main__":
     test_api_key()
     test_rate_limit()
-    print("✅ All tests passed")
+    print(" All tests passed")
 ```
 
 ---
@@ -370,13 +370,13 @@ class Grader:
         try:
             func()
             self.score += points
-            self.results.append(f"✅ {name}: {points}/{points}")
+            self.results.append(f" {name}: {points}/{points}")
             return True
         except AssertionError as e:
-            self.results.append(f"❌ {name}: 0/{points} - {e}")
+            self.results.append(f" {name}: 0/{points} - {e}")
             return False
         except Exception as e:
-            self.results.append(f"❌ {name}: 0/{points} - Error: {e}")
+            self.results.append(f" {name}: 0/{points} - Error: {e}")
             return False
     
     def check_file_exists(self, filepath):
@@ -468,7 +468,7 @@ class Grader:
     
     def run_all_tests(self):
         """Run all tests"""
-        print("🧪 Running automated tests...\n")
+        print(" Running automated tests...\n")
         
         # File structure tests
         self.test("Dockerfile exists", 2, 
@@ -500,18 +500,18 @@ class Grader:
         
         # Print results
         print("\n" + "="*60)
-        print("📊 GRADING RESULTS")
+        print(" GRADING RESULTS")
         print("="*60)
         for result in self.results:
             print(result)
         print("="*60)
-        print(f"🎯 TOTAL SCORE: {self.score}/{self.max_score}")
-        print(f"📈 PERCENTAGE: {self.score/self.max_score*100:.1f}%")
+        print(f" TOTAL SCORE: {self.score}/{self.max_score}")
+        print(f" PERCENTAGE: {self.score/self.max_score*100:.1f}%")
         
         if self.score >= self.max_score * 0.7:
-            print("✅ PASSED")
+            print(" PASSED")
         else:
-            print("❌ FAILED (need 70% to pass)")
+            print(" FAILED (need 70% to pass)")
         
         return self.score
 
@@ -718,4 +718,4 @@ A: Accept any cloud platform (AWS, GCP, Azure, Heroku, etc.)
 
 ---
 
-**Happy grading! 📝**
+**Happy grading! **

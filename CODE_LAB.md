@@ -227,9 +227,9 @@ curl http://localhost/ask -X POST \
 
 | Platform | Độ khó | Free tier | Best for |
 |----------|--------|-----------|----------|
-| Railway | ⭐ | $5 credit | Prototypes |
-| Render | ⭐⭐ | 750h/month | Side projects |
-| Cloud Run | ⭐⭐⭐ | 2M requests | Production |
+| Railway |  | $5 credit | Prototypes |
+| Render |  | 750h/month | Side projects |
+| Cloud Run |  | 2M requests | Production |
 
 ###  Exercise 3.1: Deploy Railway (15 phút)
 
@@ -656,30 +656,30 @@ Build một production-ready AI agent từ đầu, kết hợp TẤT CẢ concep
 - [ ] Deploy lên Railway hoặc Render
 - [ ] Public URL hoạt động
 
-### 🏗 Architecture
+###  Architecture
 
 ```
-┌─────────────┐
-│   Client    │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────────┐
-│  Nginx (LB)     │
-└──────┬──────────┘
-       │
-       ├─────────┬─────────┐
-       ▼         ▼         ▼
-   ┌──────┐  ┌──────┐  ┌──────┐
-   │Agent1│  │Agent2│  │Agent3│
-   └───┬──┘  └───┬──┘  └───┬──┘
-       │         │         │
-       └─────────┴─────────┘
-                 │
-                 ▼
-           ┌──────────┐
-           │  Redis   │
-           └──────────┘
+
+   Client    
+
+       
+       
+
+  Nginx (LB)     
+
+       
+       
+                         
+       
+   Agent1  Agent2  Agent3
+       
+                         
+       
+                 
+                 
+           
+             Redis   
+           
 ```
 
 ###  Step-by-step

@@ -13,7 +13,7 @@ from bot.rag import RAGStore
 log = logging.getLogger(__name__)
 
 
-# ── tool definitions (OpenAI function-calling schema) ───────────────────────
+#  tool definitions (OpenAI function-calling schema) 
 
 TOOL_SEARCH_HISTORY = {
     "type": "function",
@@ -161,7 +161,7 @@ def _estimate_chars(messages: list[dict]) -> int:
     return sum(len(json.dumps(m, ensure_ascii=False)) for m in messages)
 
 
-# ── system prompt ──────────────────────────────────────────────────────────
+#  system prompt 
 
 _SYSTEM_PROMPT = """\
 Bạn là trợ lý AI cho lớp học Discord. Bạn tìm kiếm lịch sử chat để trả lời, KHÔNG dùng kiến thức riêng.
@@ -174,11 +174,11 @@ Quy tắc:
 5. Khi trích dẫn: [text](https://discord.com/channels/{guild_id}/{channel_id}/{message_id})
 6. Không tìm thấy → nói rõ & gợi ý hỏi giảng viên. Mâu thuẫn → chỉ ra cả 2 nguồn.
 7. Trả lời ngắn gọn, tiếng Việt. KHÔNG bịa thông tin.
-8. Kết thúc: "🔬 Cao" / "🧐 Trung bình" / "🌫️ Thấp" (theo mức tin cậy).
+8. Kết thúc: " Cao" / " Trung bình" / " Thấp" (theo mức tin cậy).
 """
 
 
-# ── agent response ─────────────────────────────────────────────────────────
+#  agent response 
 
 
 @dataclass
@@ -189,7 +189,7 @@ class AgentResponse:
     correction_submitted: bool = False
 
 
-# ── agent loop ─────────────────────────────────────────────────────────────
+#  agent loop 
 
 
 async def run_agent(
@@ -361,7 +361,7 @@ async def run_agent(
     )
 
 
-# ── tool execution ────────────────────────────────────────────────────────
+#  tool execution 
 
 
 async def _execute_tool(
@@ -451,9 +451,9 @@ def _format_search_results(results: list[dict], guild_id: str) -> list[dict]:
 
 def _infer_confidence(text: str) -> str:
     """Infer confidence level from the answer text."""
-    low_signals = ["không tìm thấy", "không rõ", "cần được kiểm chứng", "thấp", "🌫️"]
-    mid_signals = ["trung bình", "có thể", "một học viên", "🧐"]
-    high_signals = ["giảng viên", "chắc chắn", "cao", "🔬"]
+    low_signals = ["không tìm thấy", "không rõ", "cần được kiểm chứng", "thấp", ""]
+    mid_signals = ["trung bình", "có thể", "một học viên", ""]
+    high_signals = ["giảng viên", "chắc chắn", "cao", ""]
 
     text_lower = text.lower()
     if any(s in text_lower for s in low_signals):

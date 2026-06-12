@@ -12,36 +12,36 @@
 
 ```
 day12_ha-tang-cloud_va_deployment/
-├── 01-localhost-vs-production/     # Section 1: Dev ≠ Production
-│   ├── develop/                      #   Agent "đúng kiểu localhost"
-│   └── production/                   #   12-Factor compliant agent
-│
-├── 02-docker/                      # Section 2: Containerization
-│   ├── develop/                      #   Dockerfile đơn giản
-│   └── production/                   #   Multi-stage + Docker Compose stack
-│
-├── 03-cloud-deployment/            # Section 3: Cloud Options
-│   ├── railway/                    #   Deploy Railway (< 5 phút)
-│   ├── render/                     #   Deploy Render + render.yaml
-│   └── production-cloud-run/         #   GCP Cloud Run + CI/CD
-│
-├── 04-api-gateway/                 # Section 4: Security
-│   ├── develop/                      #   API Key authentication
-│   └── production/                   #   JWT + Rate Limiting + Cost Guard
-│
-├── 05-scaling-reliability/         # Section 5: Scale & Reliability
-│   ├── develop/                      #   Health check + graceful shutdown
-│   └── production/                   #   Stateless + Redis + Nginx LB
-│
-├── 06-lab-complete/                # Lab 12: Production-ready agent
-│   └── (full project kết hợp tất cả)
-│
-└── utils/                          # Mock LLM dùng chung (không cần API key)
+ 01-localhost-vs-production/     # Section 1: Dev ≠ Production
+    develop/                      #   Agent "đúng kiểu localhost"
+    production/                   #   12-Factor compliant agent
+
+ 02-docker/                      # Section 2: Containerization
+    develop/                      #   Dockerfile đơn giản
+    production/                   #   Multi-stage + Docker Compose stack
+
+ 03-cloud-deployment/            # Section 3: Cloud Options
+    railway/                    #   Deploy Railway (< 5 phút)
+    render/                     #   Deploy Render + render.yaml
+    production-cloud-run/         #   GCP Cloud Run + CI/CD
+
+ 04-api-gateway/                 # Section 4: Security
+    develop/                      #   API Key authentication
+    production/                   #   JWT + Rate Limiting + Cost Guard
+
+ 05-scaling-reliability/         # Section 5: Scale & Reliability
+    develop/                      #   Health check + graceful shutdown
+    production/                   #   Stateless + Redis + Nginx LB
+
+ 06-lab-complete/                # Lab 12: Production-ready agent
+    (full project kết hợp tất cả)
+
+ utils/                          # Mock LLM dùng chung (không cần API key)
 ```
 
 ---
 
-## 🚀 Bắt Đầu Nhanh
+##  Bắt Đầu Nhanh
 
 **Muốn thử ngay?** → [QUICK_START.md](QUICK_START.md) (5 phút)
 
@@ -85,7 +85,7 @@ Mỗi folder có `requirements.txt` riêng. Không cần API key thật — các
 
 ---
 
-## 📚 Lab Materials
+##  Lab Materials
 
 Chúng tôi đã chuẩn bị đầy đủ tài liệu hướng dẫn:
 
