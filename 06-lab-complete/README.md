@@ -1,5 +1,11 @@
 # Discord Class Bot — Trợ lý AI tra cứu lịch sử lớp học
 
+<div align="center">
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/vietlinhh02/day12_ha-tang-cloud_va_deployment/tree/main/06-lab-complete)
+
+</div>
+
 <table>
 <tr><td><strong>Track</strong></td><td>A — Learning OS (Vin AI Thực Chiến)</td></tr>
 <tr><td><strong>Nhóm</strong></td><td>A4</td></tr>
