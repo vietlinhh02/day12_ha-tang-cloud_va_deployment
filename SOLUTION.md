@@ -1,5 +1,7 @@
 # SOLUTION.md — Đáp Án Code Lab Day 12
 
+> **Link deploy:** https://day12-ha-tang-cloud-va-deployment-8oes.onrender.com
+
 ## Part 1: Localhost vs Production
 
 ### Exercise 1.1: Anti-patterns trong basic code
@@ -359,3 +361,24 @@ Client -> Nginx (8080) -> Round-robin -> Agent 1, Agent 2, Agent 3
 | 5 | Redis? | instance-d64f9d | Instance khác |
 
 => **10 messages được bảo toàn xuyên suốt dù mỗi request đến instance khác nhau nhờ Redis!**
+
+---
+
+## Part 6: Deploy
+
+**Project:** Discord Class Bot (RAG + DeepSeek V4 Flash)
+
+| Platform | URL |
+|----------|-----|
+| Render | https://day12-ha-tang-cloud-va-deployment-8oes.onrender.com |
+| GitHub | https://github.com/vietlinhh02/day12_ha-tang-cloud_va_deployment |
+
+**Endpoint kiểm tra:**
+
+```bash
+# Health check
+curl https://day12-ha-tang-cloud-va-deployment-8oes.onrender.com/health
+
+# Home
+curl https://day12-ha-tang-cloud-va-deployment-8oes.onrender.com/
+```
