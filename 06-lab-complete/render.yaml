@@ -1,23 +1,23 @@
 services:
   - type: web
-    name: ai-agent-production
+    name: discord-class-bot
     runtime: docker
     region: singapore
-    plan: starter
+    plan: free
     healthCheckPath: /health
     autoDeploy: true
     envVars:
-      - key: ENVIRONMENT
-        value: production
-      - key: APP_VERSION
-        value: "1.0.0"
-      - key: OPENAI_API_KEY
+      - key: DISCORD_TOKEN
         sync: false
-      - key: AGENT_API_KEY
-        generateValue: true
-      - key: JWT_SECRET
-        generateValue: true
-      - key: DAILY_BUDGET_USD
-        value: "5.0"
-      - key: RATE_LIMIT_PER_MINUTE
-        value: "20"
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: DEEPSEEK_BASE_URL
+        value: https://opencode.ai/zen/go/v1/chat/completions
+      - key: TARGET_CHANNEL_IDS
+        sync: false
+      - key: INSTRUCTOR_IDS
+        sync: false
+      - key: HISTORY_LIMIT
+        value: "5000"
+      - key: PORT
+        value: "8000"
