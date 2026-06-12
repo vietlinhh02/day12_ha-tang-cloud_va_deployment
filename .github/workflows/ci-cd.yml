@@ -12,15 +12,9 @@ env:
   PYTHON_VERSION: "3.11"
 
 jobs:
-  # ─────────────────────────────────────────────
-  # CI: Kiểm tra code quality & production-ready
-  # ─────────────────────────────────────────────
   ci:
     name: CI — Production Readiness Check
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: 06-lab-complete
 
     steps:
       - name: Checkout code
@@ -34,21 +28,21 @@ jobs:
           cache-dependency-path: 06-lab-complete/requirements.txt
 
       - name: Install dependencies
+        working-directory: 06-lab-complete
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Production Readiness Check
+        working-directory: 06-lab-complete
         run: python check_production_ready.py
 
-      - name: Quick API smoke test
-        run: |
-          pip install httpx
-          python .github/scripts/smoke_test.py
+      - name: Install httpx for smoke tests
+        run: pip install httpx
 
-  # ─────────────────────────────────────────────
-  # CD: Build & Push Docker Image
-  # ─────────────────────────────────────────────
+      - name: Quick API smoke test
+        run: python .github/scripts/smoke_test.py
+
   cd:
     name: CD — Build & Push Docker
     needs: ci
